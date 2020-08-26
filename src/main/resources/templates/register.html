@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <style>
+        .AlinPhoto {width: 251px; height: 376px;
+            background-image:url(alin.jpg);margin: 0px auto;}
+        .AlinPhoto:hover{ background-position: -251px 0px}
+        .textShadow {
+            color: darkorange;
+            text-shadow: 2px 2px 7px #111;
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Register * WebShop AlinVlad</title>
+</head>
+<body style="background: rgb(2,0,36);background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(242,137,152,1) 35%, rgba(0,212,255,1) 100%);">
+<div style="color: white;text-align: center">
+<p style="font-size: 68px">Register Account</p>
+<p style="font-size: 17px">If you already have an account with us,please login at the <a href="index.html">Login Page</a></p>
+</div>
+<form action="/register-form" style="width: 400px;margin: auto;">
+    <div class="form-group">
+        <p style="color: navajowhite">Please fill out the form below to get started</p>
+
+        <div style="font-size: 30px" for="exampleInputEmail1" class="textShadow">Your email address</div>
+     </br>
+        <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+    </div>
+    <div class="form-group">
+        <div style="font-size: 30px" for="exampleInputPassword1" class="textShadow">Password</div>
+        <input name="password" type="password" class="form-control" id="exampleInputPassword1">
+    </div>
+
+    <div class="form-group">
+        <div style="font-size: 30px" for="exampleInputPassword2" class="textShadow">Type password again</div>
+        <input name="password-again" type="password" class="form-control" id="exampleInputPassword2">
+    </div>
+    <button type="submit" class="btn btn-outline-warning">Submit</button>
+    <p th:text="${message}"></p>
+</form>
+
+<div class="AlinPhoto"></div>
+</body>
+</html>

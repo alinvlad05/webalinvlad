@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Administrare produse</title>
+
+    <link rel="stylesheet" href="/magic.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .magictime {
+            -webkit-animation-duration: 2s;
+            animation-duration: 2s;
+        }
+    </style>
+    <script>
+        function deleteProduct(productId) {
+            //1. apelam server-ul
+            $.post("http://localhost:8080/admin/remove-product?id=" + productId);
+
+            //2. trebuie sa stergem produsul din interfata = DOM numai daca pasul 1 a fost ok
+            // var el = document.getElementById(productId);
+            // el.parentElement.parentElement.remove();
+            $("#" + productId).parent().parent().remove();
+            $("#result-message").html("Produsul a fost sters cu succes");
+            $("#result-message").removeClass("magictime puffOut");
+            $("#result-message").show();
+            setTimeout(deleteResultMessage, 2000);
+        }
+
+        function deleteResultMessage() {
+            $("#result-message").addClass("magictime puffOut");
+        }
+
+        function toggleFormAdd() {
+            $("#form-add").toggle();
+        }
+
+        function sendSaveProductRequest() {
+            var nameProduct = $("#nameProduct").val();
+            var descriptionProduct = $("#descriptionProduct").val();
+            var priceProduct = $("#priceProduct").val();
+
+            var url = "http://localhost:8080/admin/save-product?model=" + nameProduct + "&about_product=" + descriptionProduct + "&price=" + priceProduct;
+
+            //Folosesc AJAX ca sa comunic cu serverul
+            $.post(url, function (data) {
+                $("#result-message").html(data);
+                $("#result-message").removeClass("magictime puffOut");
+                $("#result-message").show();
+                setTimeout(deleteResultMessage, 2000);
+                $("#form-add").toggle();
+            });
+        }
+
+        function nextPage() {
+            $.get("http://localhost:8080/admin/products-paginated?pageNumber=2", function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    alert(data[i].name);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5>
+    <nav class="my-2 my-md-0 mr-md-3">
+        <a class="p-2 text-dark" href="#">Features</a>
+        <a class="p-2 text-dark" href="#">Enterprise</a>
+        <a class="p-2 text-dark" href="#">Support</a>
+        <a class="p-2 text-dark" href="#">Pricing</a>
+    </nav>
+    <a class="btn btn-outline-primary" href="#">Sign up</a>
+</div>
+
+<div class="shop-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width: 700px;">
+    <h1 class="display-4">Administrare produse</h1>
+</div>
+
+<div class="container" style="max-width: 960px;">
+
+    <div class="alert alert-primary" role="alert" id="result-message" style="display: none">
+
+    </div>
+
+    <button type="button" class="btn btn-info" onclick="toggleFormAdd();">Adauga produs</button>
+
+    <form id="form-add" style="display: none">
+        <div class="form-group">
+            <label for="nameProduct">Nume</label>
+            <input type="text" class="form-control" id="nameProduct">
+        </div>
+
+        <div class="form-group">
+            <label for="descriptionProduct">Descriere</label>
+            <input type="text" class="form-control" id="descriptionProduct">
+        </div>
+
+        <div class="form-group">
+            <label for="priceProduct">Pret</label>
+            <input type="text" class="form-control" id="priceProduct">
+        </div>
+
+        <button type="button" class="btn btn-info" onclick="sendSaveProductRequest();">Salveaza</button>
+    </form>
+
+    <table class="table table-bordered table-dark">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nume</th>
+            <th scope="col">Descriere</th>
+            <th scope="col">Nume categorie</th>
+            <th scope="col">Pret</th>
+            <th scope="col">Cantitate</th>
+            <th scope="col">Nume fisier poza</th>
+            <th scope="col">Actiuni</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="p : ${products}">
+            <td th:text="${p.id}"></td>
+            <td th:text="${p.model}"></td>
+            <td th:text="${p.about_product}"></td>
+            <td></td>
+            <td th:text="${p.price}"></td>
+            <td th:text="${p.id}"></td>
+            <td th:text="${p.picture}"></td>
+            <td>
+                <button type="button" class="btn btn-outline-success">Detalii</button>
+                <button type="button" class="btn btn-outline-warning">Editare</button>
+                <button type="submit" th:id="${p.id}" onclick="deleteProduct(this.id);" class="btn btn-outline-danger">
+                    Stergere
+                </button>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        <div class="row">
+            <div class="col-12 col-md">
+                <img class="mb-2" src="/docs/4.5/assets/brand/bootstrap-solid.svg" alt="" width="24" height="24">
+                <small class="d-block mb-3 text-muted">© 2019-2020</small>
+            </div>
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>
